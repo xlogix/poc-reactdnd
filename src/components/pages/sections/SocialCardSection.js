@@ -16,7 +16,7 @@ class SocialCardSection extends Component {
 		};
 	}
 
-	handleRadioChange = (index ) => {
+	handleRadioChange = (index) => {
 		const { cards } = this.state;
 		cards[index].value = !cards[index].value
 		this.setState({
@@ -25,11 +25,11 @@ class SocialCardSection extends Component {
 	}
 
 	handleDragStart = (id, event) => {
-		let fromBox = JSON.stringify({ id});
+		let fromBox = JSON.stringify({ id });
 		event.dataTransfer.setData("dragContent", fromBox);
 	};
 
-	handleDragOver = (id, event)=> {
+	handleDragOver = (id, event) => {
 		event.preventDefault(); // Necessary. Allows us to drop.
 		return false;
 	};
@@ -73,12 +73,12 @@ class SocialCardSection extends Component {
 	makeBoxes = () => {
 		return this.state.cards.map((card, index) => (
 			<MDBRow id={card.id} className="mb-12 row-padding" draggable="true"
-				onDragStart={(e) => this.handleDragStart(card.id, e)} onDragOver={(e) =>this.handleDragOver(card.id, e)}
-				onDrop={(e)=>this.handleDrop(card.id, e)}>
+				onDragStart={(e) => this.handleDragStart(card.id, e)} onDragOver={(e) => this.handleDragOver(card.id, e)}
+				onDrop={(e) => this.handleDrop(card.id, e)}>
 				<MDBCol md="1" className="d-flex align-self-center">
 					<Grid container justify="space-around">
 						<MDBIcon className="drag-padding" icon="grip-lines" />
-						<MDBInput checked={card.value} onClick={ ()=> this.handleRadioChange(index) } type="radio" id="radio1" />
+						<MDBInput checked={card.value} onClick={() => this.handleRadioChange(index)} type="radio" id="radio1" />
 					</Grid>
 				</MDBCol>
 				<MDBCol>
