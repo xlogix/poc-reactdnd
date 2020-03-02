@@ -2,39 +2,51 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { MDBContainer, MDBCard, MDBCardBody, MDBIcon, MDBRow, MDBCol, MDBInput } from 'mdbreact';
 import DatePicker from './DatePickerSection'
+import useScript from '../../hooks/useScript';
+import Select from 'react-select'
 
 class SocialCardSection extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			cards: [
-				{ id: 1, name: "Problem" },
-				{ id: 2, name: "Solution" },
-				{ id: 3, name: "Team" },
-				{ id: 4, name: "Ecosystem" },
-			],
-			radioModel: [
-				{ value: true },
-				{ value: false },
-				{ value: false },
-				{ value: false }
+				{ id: 0, name: "Problem", value: true },
+				{ id: 1, name: "Solution", value: false },
+				{ id: 2, name: "Team", value: true },
+				{ id: 3, name: "Ecosystem", value: false },
 			],
 		};
 	}
 
-	radioButtonChange = (ev, index) => {
-		const checkboxes = this.state.radioModel.slice(0);
-		const newItem = {
-			...checkboxes[index],
-			value: ev.target.checked
-		};
-
-		checkboxes.splice(index, 1, newItem);
-
+	handleRadioChange = (index ) => {
+		const { cards } = this.state;
+		cards[index].value = !cards[index].value
 		this.setState({
-			radioModel: checkboxes
+			cards
 		});
 	}
+
+	handleDragStart = (id, event) => {
+		let fromBox = JSON.stringify({ id});
+		event.dataTransfer.setData("dragContent", fromBox);
+	};
+
+	handleDragOver = (id, event)=> {
+		event.preventDefault(); // Necessary. Allows us to drop.
+		return false;
+	};
+
+	/* Fired when an element or text selection is dropped on a valid drop target */
+	/* The event is fired on the drop target(s) */
+	handleDrop = (id, event) => {
+		event.preventDefault();
+
+		let fromBox = JSON.parse(event.dataTransfer.getData("dragContent"));
+		let toBox = { id };
+
+		this.swapBoxes(fromBox, toBox);
+		return false;
+	};
 
 	swapBoxes = (fromBox, toBox) => {
 		let cards = this.state.cards.slice();
@@ -60,26 +72,33 @@ class SocialCardSection extends Component {
 		}
 	};
 
-	handleDragStart = data => event => {
-		let fromBox = JSON.stringify({ id: data.id });
-		event.dataTransfer.setData("dragContent", fromBox);
-	};
-
-	handleDragOver = data => event => {
-		event.preventDefault(); // Necessary. Allows us to drop.
-		return false;
-	};
-
-	/* Fired when an element or text selection is dropped on a valid drop target */
-	/* The event is fired on the drop target(s) */
-	handleDrop = data => event => {
-		event.preventDefault();
-
-		let fromBox = JSON.parse(event.dataTransfer.getData("dragContent"));
-		let toBox = { id: data.id };
-
-		this.swapBoxes(fromBox, toBox);
-		return false;
+	makeBoxes = () => {
+		return this.state.cards.map((card, index) => (
+			<MDBRow id={card.id} className="mb-12 row-padding" draggable="true"
+				onDragStart={(e) => this.handleDragStart(card.id, e)} onDragOver={(e) =>this.handleDragOver(card.id, e)}
+				onDrop={(e)=>this.handleDrop(card.id, e)}>
+				<MDBCol md="1" className="d-flex align-self-center">
+					<Grid container justify="space-around">
+						<MDBIcon className="drag-padding" icon="grip-lines" />
+						<MDBInput checked={card.value} onClick={ ()=> this.handleRadioChange(index) } type="radio" id="radio1" />
+					</Grid>
+				</MDBCol>
+				<MDBCol>
+					<MDBCard md="6" className="classic-admin-card d-flex align-self-center">
+						<MDBCardBody>
+							<h4 className="black-text"><strong>{card.name}</strong></h4>
+							<div className="text-right">
+								<MDBIcon icon="money-bill-alt" size="5x" className="primary-color" />
+							</div>
+							<p className="blue-text">view builder</p>
+						</MDBCardBody>
+					</MDBCard>
+				</MDBCol>
+				<MDBCol id="date" md="5" className="d-flex align-self-center">
+					{card.value ? <DatePicker /> : null}
+				</MDBCol>
+			</MDBRow>
+		));
 	};
 
 	render() {
@@ -91,101 +110,8 @@ class SocialCardSection extends Component {
 					<h4 className="headings align-right">Due Date (Optional)</h4>
 				</Grid>
 
-				<MDBRow id="1" className="mb-12 row-padding" draggable="true">
-					<MDBCol md="1" className="d-flex align-self-center">
-						<Grid container justify="space-around">
-							<MDBIcon className="drag-padding" icon="grip-lines" />
-							<MDBInput onClick={(ev) => this.radioButtonChange(ev, 0)}
-								checked={this.state.radioModel[0].value} type="radio" id="radio1" />
-						</Grid>
-					</MDBCol>
-					<MDBCol>
-						<MDBCard md="6" className="classic-admin-card d-flex align-self-center">
-							<MDBCardBody>
-								<h4 className="black-text"><strong>Problem</strong></h4>
-								<div className="text-right">
-									<MDBIcon icon="money-bill-alt" size="5x" className="primary-color" />
-								</div>
-								<p className="blue-text">view builder</p>
-							</MDBCardBody>
-						</MDBCard>
-					</MDBCol>
-					<MDBCol id="date" md="5" className="d-flex align-self-center">
-						{this.state.radioModel[0].value ? <DatePicker /> : null}
-					</MDBCol>
-				</MDBRow>
+				<div>{this.makeBoxes()}</div>;
 
-				<MDBRow id="2" className="mb-12 row-padding" draggable="true">
-					<MDBCol md="1" className="d-flex align-self-center">
-						<Grid container justify="space-around">
-							<MDBIcon className="drag-padding" icon="grip-lines" />
-							<MDBInput checked={this.state.radioModel[1].value} type="radio"
-								id="radio2" onClick={(ev) => this.radioButtonChange(ev, 1)} />
-						</Grid>
-					</MDBCol>
-					<MDBCol>
-						<MDBCard md="6" className="classic-admin-card d-flex align-self-center">
-							<MDBCardBody>
-								<h4 className="black-text"><strong>Solution</strong></h4>
-								<div className="text-right">
-									<MDBIcon icon="chart-pie" size="5x" className="primary-color" />
-								</div>
-								<p className="blue-text">view builder</p>
-							</MDBCardBody>
-						</MDBCard>
-					</MDBCol>
-					<MDBCol md="5" className="d-flex align-self-center">
-						{this.state.radioModel[1].value ? <DatePicker /> : null}
-					</MDBCol>
-				</MDBRow>
-
-				<MDBRow id="3" className="mb-12 row-padding" draggable="true">
-					<MDBCol md="1" className="d-flex align-self-center">
-						<Grid container justify="space-around">
-							<MDBIcon className="drag-padding" icon="grip-lines" />
-							<MDBInput checked={this.state.radioModel[2].value} type="radio"
-								id="radio3" onClick={(ev) => this.radioButtonChange(ev, 2)} />
-						</Grid>
-					</MDBCol>
-					<MDBCol>
-						<MDBCard md="6" className="classic-admin-card d-flex align-self-center">
-							<MDBCardBody>
-								<h4 className="black-text"><strong>Team</strong></h4>
-								<div className="text-right">
-									<MDBIcon icon="chart-line" size="5x" className="primary-color" />
-								</div>
-								<p className="blue-text">view builder</p>
-							</MDBCardBody>
-						</MDBCard>
-					</MDBCol>
-					<MDBCol md="5" className="d-flex align-self-center">
-						{this.state.radioModel[2].value ? <DatePicker /> : null}
-					</MDBCol>
-				</MDBRow>
-
-				<MDBRow id="4" className="mb-12 row-padding" draggable="true">
-					<MDBCol md="1" className="d-flex align-self-center">
-						<Grid container justify="space-around">
-							<MDBIcon className="drag-padding" icon="grip-lines" />
-							<MDBInput checked={this.state.radioModel[3].value} type="radio"
-								id="radio4" onClick={(ev) => this.radioButtonChange(ev, 3)} />
-						</Grid>
-					</MDBCol>
-					<MDBCol>
-						<MDBCard md="6" className="classic-admin-card d-flex align-self-center">
-							<MDBCardBody>
-								<h4 className="black-text"><strong>Ecosystem</strong></h4>
-								<div className="text-right">
-									<MDBIcon icon="chart-line" size="5x" className="primary-color" />
-								</div>
-								<p className="blue-text">view builder</p>
-							</MDBCardBody>
-						</MDBCard>
-					</MDBCol>
-					<MDBCol md="5" className="d-flex align-self-center">
-						{this.state.radioModel[3].value ? <DatePicker /> : null}
-					</MDBCol>
-				</MDBRow>
 			</MDBContainer >
 		);
 	}
