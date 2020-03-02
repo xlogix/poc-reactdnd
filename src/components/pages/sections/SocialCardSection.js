@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { MDBContainer, MDBCard, MDBCardBody, MDBIcon, MDBRow, MDBCol, MDBInput } from 'mdbreact';
 import DatePicker from './DatePickerSection'
-import useScript from '../../hooks/useScript';
-import Select from 'react-select'
 
 class SocialCardSection extends Component {
 	constructor(props) {
@@ -62,7 +60,7 @@ class SocialCardSection extends Component {
 			}
 		}
 
-		if (fromIndex != -1 && toIndex != -1) {
+		if (fromIndex !== -1 && toIndex !== -1) {
 			let { fromId, ...fromRest } = cards[fromIndex];
 			let { toId, ...toRest } = cards[toIndex];
 			cards[fromIndex] = { id: fromBox.id, ...toRest };
