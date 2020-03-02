@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { MDBContainer, MDBCard, MDBCardBody, MDBIcon, MDBRow, MDBCol, MDBInput } from 'mdbreact';
 import DatePicker from './DatePickerSection'
-
 class SocialCardSection extends Component {
 	constructor(props) {
 		super(props);

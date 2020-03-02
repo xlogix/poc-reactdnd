@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { MDBNavbar, MDBNavbarNav, MDBNavbarToggler, MDBCollapse, MDBNavItem } from 'mdbreact';
+import { NavLink } from 'react-router-dom';
 class TopNavigation extends Component {
 	state = {
 		collapse: false
@@ -30,8 +31,7 @@ class TopNavigation extends Component {
 							<a rel="noopener noreferrer" className="nav-link Ripple-parent" href="/">Templates</a>
 						</MDBNavItem>
 						<MDBNavItem>
-							<a className="nav-link Ripple-parent" href="/innovation">
-								Social Innovation</a>
+							<NavLink to="/innovation">Social Innovation</NavLink>
 						</MDBNavItem>
 					</MDBNavbarNav>
 				</MDBCollapse>
