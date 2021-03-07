@@ -9,7 +9,7 @@ import {
 } from '@material-ui/pickers';
 
 export default function DatePicker() {
-	const [selectedDate, setSelectedDate] = React.useState(new Date('2020-02-26T21:11:54'));
+	const [selectedDate, setSelectedDate] = React.useState(new Date('2020-03-07T21:11:54'));
 
 	const handleDateChange = date => {
 		setSelectedDate(date);

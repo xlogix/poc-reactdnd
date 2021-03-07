@@ -21,3 +21,18 @@ class App extends Component {
 }
 
 export default App;
+
+// function App() {
+//   return (
+//     <div className="flexible-content">
+//       <TopNavigation />
+//       <SideNavigation />
+//       <main id="content" className="p-5">
+//         <Routes />
+//       </main>
+//       <Footer />
+//     </div>
+//   );
+// }
+
+// export default App;
